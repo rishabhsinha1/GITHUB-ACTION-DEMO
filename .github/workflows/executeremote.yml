@@ -19,10 +19,11 @@ jobs:
             IdentityFile ~/.ssh/devkey.key
             StrictHostKeyChecking no
           END
+          chmod 600 ~/.ssh/config
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Stop the server
-        run: ssh dev 'cd tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
+      - name: update temp directory in the server
+        run: ssh dev 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
