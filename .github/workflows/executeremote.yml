@@ -25,5 +25,14 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: update temp directory in the server
+      - name: update temp directory in the destination server
         run: ssh dev 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
+        
+      - name: Run script in destination Server
+        run: ssh dev "bash -s" < ./scripts/samplescripts.sh
+
+      - name: Delete the SSH config file
+        run: |
+          rm ~/.ssh/config
+          rm ~/.ssh/devkey.key
+        
