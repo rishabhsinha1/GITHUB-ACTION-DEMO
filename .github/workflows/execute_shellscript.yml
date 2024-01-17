@@ -1,7 +1,5 @@
 name: execute_shell
-on:
- schedule:
-  - cron: '10 3 * * *' # cron timings
+on: workflow_dispatch
 jobs:
   # test:
   #   ...
