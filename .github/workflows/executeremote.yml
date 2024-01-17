@@ -30,6 +30,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: scp the script to destination
+        run: |
+         # Copying script from GitHub to Runner server
+         cp ./scripts/samplescripts.sh /tmp/samplescripts.sh
+         scp -F ~/.ssh/config /tmp/samplescripts.sh dev:/tmp/samplescripts.sh
+         ssh dev 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
+
       - name: update temp directory in the destination server
         run: ssh dev 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
         
