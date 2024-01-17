@@ -1,4 +1,4 @@
-name: execute_cron
+name: execute_shell
 on:
  schedule:
   - cron: '10 3 * * *' # cron timings
