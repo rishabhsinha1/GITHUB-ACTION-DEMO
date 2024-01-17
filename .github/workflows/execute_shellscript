@@ -1,0 +1,43 @@
+name: execute_cron
+on:
+ schedule:
+  - cron: '10 3 * * *' # cron timings
+jobs:
+  # test:
+  #   ...
+  deploy:
+    name: "Deploy to dev"
+    runs-on: test-runner
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/devkey.key
+          chmod 600 ~/.ssh/devkey.key
+          cat >>~/.ssh/config <<END
+          Host dev
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/devkey.key
+            StrictHostKeyChecking no
+          END
+          chmod 600 ~/.ssh/config
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: update temp directory in the destination server
+        run: ssh dev 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
+        
+      - name: Run script in destination Server
+        run: ssh dev "bash -s" < ./scripts/samplescripts.sh
+
+      - name: Delete the SSH config file
+        run: |
+          rm ~/.ssh/config
+          rm ~/.ssh/devkey.key
+        
