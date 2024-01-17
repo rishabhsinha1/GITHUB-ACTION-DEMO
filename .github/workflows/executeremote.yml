@@ -1,7 +1,7 @@
 name: execute_cron
 on:
  schedule:
-  - cron: '14 21 * * *' # cron timings
+  - cron: '35 21 * * *' # cron timings
 jobs:
   # test:
   #   ...
