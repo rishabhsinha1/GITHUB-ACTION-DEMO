@@ -1,0 +1,20 @@
+name: Health check invoke via cron 
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '30 21 * * *'
+    - cron:  '30 22 * * *'
+jobs:
+  call-workflow-passing-data:
+    if:githu.event.schedule == '30 21 * * *'
+    uses: ./.github/workflows/healthcheck.yml
+    with:
+      env: QA
+    secrets: inherit
+  call-workflow-passing-data:
+    if:githu.event.schedule == '30 22 * * *'
+    uses: ./.github/workflows/healthcheck.yml
+    with:
+      env: SIT
+    secrets: inherit
