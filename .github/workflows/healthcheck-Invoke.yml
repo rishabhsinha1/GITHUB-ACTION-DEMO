@@ -1,0 +1,20 @@
+name: HealthCheck-OSB-Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      Enviornment:
+        description: 'Enter Enviornment'
+        required: true
+        default: 'QA'
+        type: choice
+        options:
+        - QA
+        - SIT
+        - debug
+jobs:
+  call-workflow-passing-data:
+    uses: ./.github/workflows/healthcheck.yml
+    with:
+      env: ${{ imputs.Enviornment }}
+    secrets: inherit
