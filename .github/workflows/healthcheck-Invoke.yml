@@ -14,7 +14,7 @@ on:
         - debug
 jobs:
   call-workflow-passing-data:
-    uses: ./.github/workflows/healthcheck.yml
-    with:
-      env: ${{ imputs.Enviornment }}
-    secrets: inherit
+         uses: ./.github/workflows/healthcheck.yml
+         with:
+            env: ${{ imputs.Enviornment }}
+         secrets: inherit
