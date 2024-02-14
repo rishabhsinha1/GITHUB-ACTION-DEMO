@@ -61,5 +61,5 @@ jobs:
              - name: Delete the SSH config file
                run: |
                  rm ~/.ssh/config
-                 rm ~/.ssh/devkey.key
+                 rm ~/.ssh/priv.key
         
