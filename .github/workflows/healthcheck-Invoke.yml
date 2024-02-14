@@ -1,4 +1,4 @@
-name: HealthCheck-OSB-Check
+name: HealthCheck-OSB-Check-invoke
 
 on:
   workflow_dispatch:
