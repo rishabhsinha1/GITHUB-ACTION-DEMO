@@ -13,8 +13,23 @@ on:
         - SIT
         - debug
 jobs:
+  get-env-variables:
+    environment: ${{ inputs.Enviornment}}
+    runs-on: test-runner
+    env:
+      Local_User: ${{ vars.SSH_USER}}
+    outputs:
+      server_user: ${{ vars.SSH_USER}}
+    steps:
+    - name: checkout code
+      uses: action@checkout@v2
+    - name: Debug SSH User
+      run: echo "SSH_server_User=$server_user"
+    
   call-workflow-passing-data:
+         needs: get-env-variables
          uses: ./.github/workflows/healthcheck.yml
          with:
             env: ${{ inputs.Enviornment }}
+            ssh_user: ${{needs.get-env-variables.outputs.server_user}}
          secrets: inherit
