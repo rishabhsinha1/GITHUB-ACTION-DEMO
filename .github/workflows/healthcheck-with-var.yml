@@ -1,0 +1,65 @@
+name: execute_Healthcheck
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+        default: 'QA'
+env:
+    HOST: ${{ inputs.env }}
+jobs:
+ setconnection:
+   name: "Connection Set-Up"
+   runs-on: test-runner
+   if: ${{ contains(inputs.env, 'QA') || contains(inputs.env, 'SIT') }}
+   environment: ${{ inputs.env }}
+   env:
+       SSH_USER: ${{ secrets.SSH_USER }}
+       SSH_KEY: ${{ secrets.SSH_KEY }}
+       SSH_HOST: ${{ secrets.SSH_HOST }}
+   steps:
+        - name: Configure SSH
+          run: |
+           mkdir -p ~/.ssh/
+           echo "$SSH_KEY" > ~/.ssh/priv.key
+           chmod 600 ~/.ssh/priv.key
+           cat >>~/.ssh/config <<END
+           Host $HOST
+             HostName $SSH_HOST
+             User $SSH_USER
+             IdentityFile ~/.ssh/priv.key
+             StrictHostKeyChecking no
+           END
+           chmod 600 ~/.ssh/config
+
+        - name: Checkout Code
+          uses: actions/checkout@v2
+        
+        - name: scp the script to destination
+          run: |
+             # Copying script from GitHub to Runner server
+             cp ./scripts/samplescripts.sh /tmp/samplescripts.sh
+             scp -F ~/.ssh/config /tmp/samplescripts.sh $HOST:/tmp/samplescripts.sh
+             ssh $HOST 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
+
+ Healthcheck_Execute:
+       name: "Execute Health Check"
+       needs: [setconnection]
+       runs-on: test-runner
+       if: ${{ contains(inputs.env, 'QA') || contains(inputs.env, 'SIT') }}
+       steps:
+             - name: Checkout Code
+               uses: actions/checkout@v3
+               
+             - name: update temp directory in the destination server
+               run: ssh $HOST 'cd /tmp;touch filecreatedbyAction_$( date +"%m_%d_%Y")'
+        
+             - name: Run script in destination Server
+               run: ssh $HOST "bash -s" < ./scripts/samplescripts.sh
+
+             - name: Delete the SSH config file
+               run: |
+                 rm ~/.ssh/config
+                 rm ~/.ssh/priv.key
+        
