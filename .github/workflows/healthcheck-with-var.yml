@@ -6,8 +6,14 @@ on:
         required: true
         type: string
         default: 'QA'
+      ssh_user:
+        required: true
+        type: string
+        default: 'DoesnotExist'
+      
 env:
     HOST: ${{ inputs.env }}
+    SSH_USER: ${{input.ssh_user}}
 jobs:
  setconnection:
    name: "Connection Set-Up"
@@ -15,7 +21,7 @@ jobs:
    if: ${{ contains(inputs.env, 'QA') || contains(inputs.env, 'SIT') }}
    environment: ${{ inputs.env }}
    env:
-       SSH_USER: ${{ secrets.SSH_USER }}
+       #SSH_USER: ${{ secrets.SSH_USER }}
        SSH_KEY: ${{ secrets.SSH_KEY }}
        SSH_HOST: ${{ secrets.SSH_HOST }}
    steps:
