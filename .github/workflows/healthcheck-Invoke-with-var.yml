@@ -30,6 +30,6 @@ jobs:
          needs: get-env-variables
          uses: ./.github/workflows/healthcheck-with-var.yml
          with:
-            env: ${{ inputs.Enviornment }}
+            env: ${{ inputs.enviornment }}
             ssh_user: ${{needs.get-env-variables.outputs.server_user}}
          secrets: inherit
