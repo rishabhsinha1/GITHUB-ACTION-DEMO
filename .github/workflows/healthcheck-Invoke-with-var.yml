@@ -28,7 +28,7 @@ jobs:
     
   call-workflow-passing-data:
          needs: get-env-variables
-         uses: ./.github/workflows/healthcheck.yml
+         uses: ./.github/workflows/healthcheck-with-var.yml
          with:
             env: ${{ inputs.Enviornment }}
             ssh_user: ${{needs.get-env-variables.outputs.server_user}}
