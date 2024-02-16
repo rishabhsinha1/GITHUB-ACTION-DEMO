@@ -1,4 +1,4 @@
-name: execute_Healthcheck
+name: execute_Healthcheck-with-var
 on:
   workflow_call:
     inputs:
