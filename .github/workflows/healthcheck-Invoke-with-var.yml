@@ -3,7 +3,7 @@ name: HealthCheck-OSB-Check-invoke-with var
 on:
   workflow_dispatch:
     inputs:
-      Enviornment:
+      enviornment:
         description: 'Enter Enviornment'
         required: true
         default: 'QA'
@@ -14,7 +14,7 @@ on:
         - debug
 jobs:
   get-env-variables:
-    environment: ${{ inputs.Enviornment}}
+    environment: ${{ inputs.enviornment}}
     runs-on: test-runner
     env:
       Local_User: ${{ vars.SSH_USER}}
